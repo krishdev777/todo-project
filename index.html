@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Todo</title>
+
+<style>
+body{
+background:#667eea;
+padding:20px;
+font-family:Arial;
+}
+
+#b1{
+background:white;
+width:100%;
+max-width:1000px;
+margin:auto;
+padding:20px;
+border-radius:10px;
+}
+
+h1{text-align:center;}
+
+#b2{
+text-align:center;
+margin-bottom:20px;
+}
+
+button{
+padding:10px;
+margin:5px;
+border:none;
+color:white;
+cursor:pointer;
+}
+
+#aa{background:#3498db;}
+#bb{background:#2ecc71;}
+#cc{background:#e74c3c;}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+td,th{
+padding:10px;
+border-bottom:1px solid #ccc;
+}
+
+thead{background:#333;color:white;}
+
+.ok{background:#d4edda;}
+.no{background:#f8d7da;}
+
+#ld{
+text-align:center;
+font-size:18px;
+padding:30px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="b1">
+
+<h1>Todo Task Manager</h1>
+
+<div id="b2">
+<button id="aa" onclick="ff('a')">All</button>
+<button id="bb" onclick="ff('b')">Completed</button>
+<button id="cc" onclick="ff('c')">Uncompleted</button>
+</div>
+
+<div id="z1">
+<div id="ld">Loading todos...</div>
+</div>
+
+</div>
+
+<script>
+var arr=[];
+var flg="a";
+var tmp=0;
+var i1=0;
+
+function gg(){
+var r=new XMLHttpRequest();
+r.open("GET","https://jsonplaceholder.typicode.com/todos",true);
+r.onreadystatechange=function(){
+if(r.readyState==4){
+if(r.status==200){
+arr=JSON.parse(r.responseText);
+hh();
+}
+}
+};
+r.send();
+}
+
+function ff(x){
+flg=x;
+hh();
+}
+
+function cc(v){
+for(i1=0;i1<arr.length;i1=i1+1){
+if(arr[i1].id==v){
+if(arr[i1].completed==true){
+arr[i1].completed=false;
+}else{
+arr[i1].completed=true;
+}
+}
+}
+hh();
+}
+
+function hh(){
+var s="";
+var j=0;
+s=s+"<table>";
+s=s+"<thead><tr>";
+s=s+"<th>ID</th>";
+s=s+"<th>User</th>";
+s=s+"<th>Task</th>";
+s=s+"<th>Status</th>";
+s=s+"<th>Action</th>";
+s=s+"</tr></thead>";
+s=s+"<tbody>";
+
+for(j=0;j<arr.length;j=j+1){
+
+tmp=0;
+
+if(flg=="a"){
+tmp=1;
+}else{
+if(flg=="b"){
+if(arr[j].completed==true){
+tmp=1;
+}else{
+tmp=0;
+}
+}else{
+if(flg=="c"){
+if(arr[j].completed==false){
+tmp=1;
+}else{
+tmp=0;
+}
+}
+}
+}
+
+if(tmp==1){
+var cl="";
+var st="";
+
+if(arr[j].completed==true){
+cl="ok";
+st="Completed";
+}else{
+cl="no";
+st="Pending";
+}
+
+s=s+"<tr class='"+cl+"'>";
+s=s+"<td>"+arr[j].id+"</td>";
+s=s+"<td>"+arr[j].userId+"</td>";
+s=s+"<td>"+arr[j].title+"</td>";
+s=s+"<td>"+st+"</td>";
+s=s+"<td><button onclick='cc("+arr[j].id+")'>Toggle</button></td>";
+s=s+"</tr>";
+}
+}
+
+s=s+"</tbody></table>";
+document.getElementById("z1").innerHTML=s;
+}
+
+gg();
+</script>
+
+</body>
+</html>
